@@ -1255,7 +1255,7 @@ def writeBezelConfig(generator, bezel, shaderBezel, retroarchConfig, rom, gameRe
     else:
         if bezel is None:
             return
-        bz_infos = bezelsUtil.getBezelInfos(rom, bezel, system.name, True)
+        bz_infos = bezelsUtil.getBezelInfos(rom, bezel, system.name, 'retroarch')
         if bz_infos is None:
             return
 
