@@ -5,11 +5,12 @@ export LC_NUMERIC="en_US.UTF-8"
 # Daemon modes
 DAEMON_MODE_OFF=0
 DAEMON_MODE_STATIC=1
-DAEMON_MODE_BREATHING_FAST=2
+DAEMON_MODE_BREATHING_FAST=2 # Not supported, yet!
 DAEMON_MODE_BREATHING_MEDIUM=3
-DAEMON_MODE_BREATHING_SLOW=4
-DAEMON_MODE_SINGLE_RAINBOW=5
-DAEMON_MODE_MULTI_RAINBOW=6
+DAEMON_MODE_BREATHING_SLOW=4 # Not supported, yet!
+DAEMON_MODE_SINGLE_RAINBOW=5 # Not supported, yet!
+DAEMON_MODE_MULTI_RAINBOW=6 # Not supported, yet!
+DAEMON_MODE_ACHIEVEMENT="achievement"
 
 # Known TrimUI LED modes
 LED_MODE_OFF=0
@@ -45,7 +46,9 @@ BRIGHTNESS=0
 # from a daemon/Anbernic mode to a TrimUI LED mode.
 setMode() {
 
-  if [ $1 -eq $DAEMON_MODE_OFF ]; then
+  if [ "$1" == $DAEMON_MODE_ACHIEVEMENT ]; then
+    MODE=$LED_MODE_BLINK_TRIPLE
+  elif [ $1 -eq $DAEMON_MODE_OFF ]; then
     MODE=$LED_MODE_OFF
   elif [ $1 -eq $DAEMON_MODE_STATIC ]; then
     MODE=$LED_MODE_STATIC # TODO: Check if this is the correct mode?
@@ -257,6 +260,9 @@ echo "Your call: $0 $1 $2 $3 $4 $5"
 if [ $# -gt 0 ] && [ $1 -eq $DAEMON_MODE_OFF ]; then
   disableLed
   exit 1
+# Play an achievement effect
+elif [ $# -eq 2 ] && [ "$1" == $DAEMON_MODE_ACHIEVEMENT ]; then
+  setRGBBasedMode $1 $2 255 255 255
 # Go to a speed-based mode (not yet supported)
 elif [ $# -eq 3 ] && [ $1 -gt 4 ]; then
   setSpeedBasedMode $1 $2 $3

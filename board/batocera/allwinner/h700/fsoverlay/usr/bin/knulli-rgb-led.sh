@@ -9,6 +9,8 @@ fi
 # Define the serial device
 SERIAL_DEVICE="/dev/ttyS5"
 
+DEFAULT_SPEED=0
+
 # Display LED mode descriptions and usage examples if no parameters are provided
 if [ $# -eq 0 ]; then
   echo "Usage: $0 <led_mode> <brightness_value> [<speed_value>|<r_value> <g_value> <b_value> [<joystick_r> <joystick_g> <joystick_b>]]"
@@ -36,6 +38,9 @@ if [ $# -eq 0 ]; then
   echo "6: Multicolor Rainbow (Rainbow Swirl effect)"
   echo "   Usage: $0 6 <brightness_value> <speed_value>"
   echo "   Example: $0 6 100 100   # Multicolor rainbow swirl effect at maximum brightness with speed 100"
+  echo "achievement: Play achievement animation"
+  echo "   Usage: $0 achievement <brightness_value>"
+  echo "   Example: $0 achievement 100  # LED off"
   exit 0
 fi
 
@@ -69,9 +74,21 @@ elif [ $BRIGHTNESS -lt 0 ] || [ $BRIGHTNESS -gt 100 ]; then
   exit 1
 fi
 
+# The H700 brightness has an integer range of 0-255
+# So we need to do some math first:
+# Divide by 100 and mulitply by 255
+BRIGHTNESS_FLOAT=$(echo "scale=2; $BRIGHTNESS/100*255" | bc)
+
+# Round it to get applicable brightness
+BRIGHTNESS="$(printf '%.0f' ${BRIGHTNESS_FLOAT})"
+echo "Calculated brightness: $BRIGHTNESS"
+
 # Ensure LED mode is within the valid range (1-6)
 if [ -z $LED_MODE ]; then
   LED_MODE=0
+elif [ "$LED_MODE" == 'achievement' ]; then
+  LED_MODE=6
+  DEFAULT_SPEED=5
 elif [ $LED_MODE -lt 0 ] || [ $LED_MODE -gt 6 ]; then
   echo "LED mode must be between 0 (off) and 6"
   exit 1
@@ -129,13 +146,22 @@ elif [ $LED_MODE -ge 5 ] && [ $LED_MODE -le 6 ]; then
 
   SPEED=$3
 
-  # Ensure speed is within the valid range (0-255)
+  # Ensure speed is within the valid range (0-100)
   if [ -z $SPEED ]; then
-    SPEED=0
-  elif [ $SPEED -lt 0 ] || [ $SPEED -gt 255 ]; then
-    echo "Speed value must be between 0 and 255"
+    SPEED=$DEFAULT_SPEED
+  elif [ $SPEED -lt 0 ] || [ $SPEED -gt 100 ]; then
+    echo "Speed value must be between 0 and 100"
     exit 1
   fi
+
+  # The H700 speed has an integer range of 0-255
+  # So we need to do some math first:
+  # Divide by 100 and mulitply by 255
+  SPEED_FLOAT=$(echo "scale=2; $SPEED/100*255" | bc)
+  
+  # Round it to get applicable brightness
+  SPEED="$(printf '%.0f' ${SPEED_FLOAT})"
+  echo "Calculated speed: $SPEED"
 
   # Calculate the checksum
   CHECKSUM=$(calculate_checksum $LED_MODE $BRIGHTNESS 1 1 $SPEED)

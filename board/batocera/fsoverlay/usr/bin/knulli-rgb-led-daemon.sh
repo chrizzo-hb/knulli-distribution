@@ -40,7 +40,7 @@ MODE_BATTERY_CHARGING=4
 DEFAULT_LED_MODE=1
 DEFAULT_BRIGHTNESS=70
 DEFAULT_LED_BRIGHTNESS_ADAPTIVE=1
-DEFAULT_SPEED=15
+DEFAULT_SPEED=5
 DEFAULT_COLOUR=(148 255 0)
 DEFAULT_BATTERY_LOW_THRESHOLD=20
 DEFAULT_BATTERY_VERY_LOW_THRESHOLD=5
@@ -122,7 +122,7 @@ initializeLedValues() {
   if [[ ! -n $LED_BRIGHTNESS_ADAPTIVE ]] || [ $LED_BRIGHTNESS_ADAPTIVE -lt 0 ] || [ $LED_BRIGHTNESS_ADAPTIVE -gt 1 ]; then
     batocera-settings-set $KEY_LED_BRIGHTNESS_ADAPTIVE $DEFAULT_LED_BRIGHTNESS_ADAPTIVE
   fi
-  if [[ ! -n $LED_SPEED ]] || [ -z $LED_SPEED ] || [ $LED_SPEED -lt 0 ] || [ $LED_SPEED -gt 255 ]; then
+  if [[ ! -n $LED_SPEED ]] || [ -z $LED_SPEED ] || [ $LED_SPEED -lt 0 ] || [ $LED_SPEED -gt 100 ]; then
     batocera-settings-set $KEY_LED_SPEED $DEFAULT_SPEED
   fi
   if [ -z $LED_COLOUR ] || [ "${#LED_COLOUR[@]}" -lt 3 ] || [ -z ${LED_COLOUR[0]} ] || [ ${LED_COLOUR[0]} -lt 0 ] || [ ${LED_COLOUR[0]} -gt 255 ] || [ -z ${LED_COLOUR[1]} ] || [ ${LED_COLOUR[1]} -lt 0 ] || [ ${LED_COLOUR[1]} -gt 255 ] || [ -z ${LED_COLOUR[2]} ] || [ ${LED_COLOUR[2]} -lt 0 ] || [ ${LED_COLOUR[2]} -gt 255 ]; then
@@ -162,8 +162,8 @@ readLedValues() {
     return
   fi
 
-  # Ensure speed is provided for modes 5 and 6 and within the valid range (0-255)
-  if [[ ! -n $LED_SPEED ]] || [ -z $LED_SPEED ] || [ $LED_SPEED -lt 0 ] || [ $LED_SPEED -gt 255 ]; then
+  # Ensure speed is provided for modes 5 and 6 and within the valid range (0-100)
+  if [[ ! -n $LED_SPEED ]] || [ -z $LED_SPEED ] || [ $LED_SPEED -lt 0 ] || [ $LED_SPEED -gt 100 ]; then
     echo "Invalid or missing LED speed ($LED_SPEED) - no LED settings applied."
     return
   fi
@@ -452,9 +452,9 @@ runAnimation() {
     # Stop daemon without turning of LEDs
     kill $LED_PID
     updateAppliedBrightness
-    # Play rainbow animation
-    if [ $# -eq 1 ] && [ "$1" == "rainbow" ]; then
-      /usr/bin/knulli-rgb-led.sh 6 $APPLIED_BRIGHTNESS 50
+    # Play achievement animation
+    if [ $# -eq 1 ] && [ "$1" == "achievement" ]; then
+      /usr/bin/knulli-rgb-led.sh $1 $APPLIED_BRIGHTNESS
       LAST_APPLIED_BRIGHTNESS=$APPLIED_BRIGHTNESS
       sleep 1.5
     fi
@@ -469,7 +469,7 @@ runAnimation() {
 # Prints instructions to stdout.
 printInstructions() {
   echo "Usage: $0 [operation] [arguments]"
-  echo "Daemon for analog stick RGB LED control on Anbernic devices"
+  echo "Daemon for analog stick RGB LED control on supported devices"
   echo "from the RG40XX H/V series."
   echo ""
   echo "Possible operations:"
@@ -480,11 +480,10 @@ printInstructions() {
   echo "             with manually set RGB colors. Example:"
   echo "             $0 set 148 255 0"
   echo "  animation  Runs the given animation. Example:"
-  echo "             $0 animation rainbow"
-  echo "             Supported animations: rainbow"
+  echo "             $0 animation achievement"
+  echo "             Supported animations: achievement"
   echo ""
   echo "Requires knulli-rgb-led.sh to be installed."
-  echo "Only works on RG40XX H/V devices."
 }
 
 if [ $# -eq 0 ]; then
@@ -499,7 +498,7 @@ elif [ "$1" == "restart" ]; then
 elif [ "$1" == "import" ]; then
   readLedValues
 elif [ "$1" == "animation" ]; then
-  if [ $# -eq 2 ] && [ "$2" == "rainbow" ]; then
+  if [ $# -eq 2 ] && [ "$2" == "achievement" ]; then
     runAnimation $2
   else
     printInstructions
