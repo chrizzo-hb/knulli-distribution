@@ -20,5 +20,5 @@ fi
 
 # Let the LED daemon run the rainbow animation if retroachievement effect is turned on
 if [ $LED_RETRO_ACHIEVEMENTS -eq $EFFECT_ON ]; then
-  /usr/bin/knulli-rgb-led-daemon.sh animation rainbow
+  /usr/bin/knulli-rgb-led-daemon animation rainbow
 fi

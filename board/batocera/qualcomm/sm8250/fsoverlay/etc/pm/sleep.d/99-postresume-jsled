@@ -10,7 +10,7 @@ fi
 case "$1" in
     thaw|resume)
         if echo "$SERVICES" | grep -q "rgb-led"; then
-            /usr/bin/knulli-rgb-led-daemon.sh restart
+            /usr/bin/knulli-rgb-led-daemon restart
         fi
         ;;
 esac
