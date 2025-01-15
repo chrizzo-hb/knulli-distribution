@@ -38,7 +38,7 @@ MODE_BATTERY_CHARGING=4
 
 # Define some default RGB LED settings
 DEFAULT_LED_MODE=1
-DEFAULT_BRIGHTNESS=100
+DEFAULT_BRIGHTNESS=70
 DEFAULT_LED_BRIGHTNESS_ADAPTIVE=1
 DEFAULT_SPEED=15
 DEFAULT_COLOUR=(148 255 0)
@@ -116,7 +116,7 @@ initializeLedValues() {
   if [[ ! -n $LED_MODE ]] || [ $LED_MODE -lt 0 ] || [ $LED_MODE -gt 6 ]; then
     batocera-settings-set $KEY_LED_MODE $DEFAULT_LED_MODE
   fi
-  if [[ ! -n $LED_BRIGHTNESS ]] || [ $LED_BRIGHTNESS -lt 0 ] || [ $LED_BRIGHTNESS -gt 255 ]; then
+  if [[ ! -n $LED_BRIGHTNESS ]] || [ $LED_BRIGHTNESS -lt 0 ] || [ $LED_BRIGHTNESS -gt 100 ]; then
     batocera-settings-set $KEY_LED_BRIGHTNESS $DEFAULT_BRIGHTNESS
   fi
   if [[ ! -n $LED_BRIGHTNESS_ADAPTIVE ]] || [ $LED_BRIGHTNESS_ADAPTIVE -lt 0 ] || [ $LED_BRIGHTNESS_ADAPTIVE -gt 1 ]; then

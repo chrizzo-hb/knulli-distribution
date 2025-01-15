@@ -68,7 +68,7 @@ setMode() {
 
 }
 
-# Converts brightness (0-255) into an integer of (0-60)
+# Converts brightness (0-100) into an integer of (0-60)
 setBrightness() {
 
   BRIGHTNESS_DEC=$1
@@ -76,8 +76,8 @@ setBrightness() {
   
   # The TSP has an integer range of 0-60
   # So we need to do some math first:
-  # Divide by 255 and mulitply by 60
-  BRIGHTNESS_TSP_FLOAT=$(echo "scale=2; $BRIGHTNESS_DEC/255*$MAX_INTEGER" | bc)
+  # Divide by 100 and mulitply by 60
+  BRIGHTNESS_TSP_FLOAT=$(echo "scale=2; $BRIGHTNESS_DEC/100*$MAX_INTEGER" | bc)
 
   echo BRIGHTNESS_TSP_FLOAT $BRIGHTNESS_TSP_FLOAT
 
@@ -206,7 +206,7 @@ printInstructions() {
   echo "             4: breath (slow)"
   echo "             5: single rainbow (cyling through colors)"
   echo "             6: multi rainbow (swirl)"
-  echo "  brightness 0-255"
+  echo "  brightness 0-100"
   echo "  red        0-255"
   echo "  green      0-255"
   echo "  blue       0-255"
@@ -221,7 +221,7 @@ setRGBBasedMode() {
   # If mode is not between 1-4 or brightness is not between
   # 0 and 100 or any RGB color is not between 0 and 255,
   # print instructions and quit.
-  if [ $1 -gt 4 ] || [ $2 -lt 0 ] || [ $2 -gt 255 ] || [ $3 -lt 0 ] || [ $3 -gt 255 ] || [ $4 -lt 0 ] || [ $4 -gt 255 ] || [ $5 -lt 0 ] || [ $5 -gt 255 ]; then
+  if [ $1 -gt 4 ] || [ $2 -lt 0 ] || [ $2 -gt 100 ] || [ $3 -lt 0 ] || [ $3 -gt 255 ] || [ $4 -lt 0 ] || [ $4 -gt 255 ] || [ $5 -lt 0 ] || [ $5 -gt 255 ]; then
     printInstructions
     exit 1
   fi

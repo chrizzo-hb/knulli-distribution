@@ -18,24 +18,24 @@ if [ $# -eq 0 ]; then
   echo "   Example: $0 0   # LED off"
   echo "1: Solid Color (no effects)"
   echo "   Usage: $0 1 <brightness_value> <right_joystick_r> <right_joystick_g> <right_joystick_b> <left_joystick_r> <left_joystick_g> <left_joystick_b>"
-  echo "   Example: $0 1 255 255 0 0 0 0 255   # Right joystick color red, left joystick color blue"
+  echo "   Example: $0 1 100 255 0 0 0 0 255   # Right joystick color red, left joystick color blue"
   echo "   Randomize: $0 1 <brightness_value> randomize"
-  echo "   Example: $0 1 255 randomize  # Randomize RGB values and send to /dev/ttyS5 until stopped"
+  echo "   Example: $0 1 100 randomize  # Randomize RGB values and send to /dev/ttyS5 until stopped"
   echo "2: Solid Color (Breathing, Fast)"
   echo "   Usage: $0 2 <brightness_value> <right_joystick_r> <right_joystick_g> <right_joystick_b> <left_joystick_r> <left_joystick_g> <left_joystick_b>"
-  echo "   Example: $0 2 255 0 255 0 0 0 255   # Green color at maximum brightness with fast breathing effect"
+  echo "   Example: $0 2 100 0 255 0 0 0 255   # Green color at maximum brightness with fast breathing effect"
   echo "3: Solid Color (Breathing, Medium)"
   echo "   Usage: $0 3 <brightness_value> <right_joystick_r> <right_joystick_g> <right_joystick_b> <left_joystick_r> <left_joystick_g> <left_joystick_b>"
-  echo "   Example: $0 3 255 0 0 255 0 0 255   # Blue color at maximum brightness with medium breathing effect"
+  echo "   Example: $0 3 100 0 0 255 0 0 255   # Blue color at maximum brightness with medium breathing effect"
   echo "4: Solid Color (Breathing, Slow)"
   echo "   Usage: $0 4 <brightness_value> <right_joystick_r> <right_joystick_g> <right_joystick_b> <left_joystick_r> <left_joystick_g> <left_joystick_b>"
-  echo "   Example: $0 4 255 255 255 0 255 255 0   # Yellow color at maximum brightness with slow breathing effect"
+  echo "   Example: $0 4 100 255 255 0 255 255 0   # Yellow color at maximum brightness with slow breathing effect"
   echo "5: Monochromatic Rainbow (Cycle between RGB colors)"
   echo "   Usage: $0 5 <brightness_value> <speed_value>"
-  echo "   Example: $0 5 255 100   # Monochromatic rainbow effect at maximum brightness with speed 100"
+  echo "   Example: $0 5 100 100   # Monochromatic rainbow effect at maximum brightness with speed 100"
   echo "6: Multicolor Rainbow (Rainbow Swirl effect)"
   echo "   Usage: $0 6 <brightness_value> <speed_value>"
-  echo "   Example: $0 6 255 100   # Multicolor rainbow swirl effect at maximum brightness with speed 100"
+  echo "   Example: $0 6 100 100   # Multicolor rainbow swirl effect at maximum brightness with speed 100"
   exit 0
 fi
 
@@ -64,8 +64,8 @@ echo $LED_MODE
 # Ensure brightness is within the valid range (0-255)
 if [ -z $BRIGHTNESS ]; then
   BRIGHTNESS=0
-elif [ $BRIGHTNESS -lt 0 ] || [ $BRIGHTNESS -gt 255 ]; then
-  echo "Brightness value must be between 0 and 255"
+elif [ $BRIGHTNESS -lt 0 ] || [ $BRIGHTNESS -gt 100 ]; then
+  echo "Brightness value must be between 0 and 100"
   exit 1
 fi
 
