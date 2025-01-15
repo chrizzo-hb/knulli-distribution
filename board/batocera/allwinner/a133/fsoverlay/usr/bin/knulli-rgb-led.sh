@@ -38,7 +38,7 @@ BRIGHTNESS=0
 
 # Converts Daemon mode into TrimUI LED mode
 #
-# The analog_stick_led_daemon.sh was written for the
+# The knulli-rgb-led-daemon.sh was written for the
 # Anbernic RG40XXH/V and RGCubeXX, consequently it
 # sets the modes known from those devices.
 # Before a mode can be set, it must be translated

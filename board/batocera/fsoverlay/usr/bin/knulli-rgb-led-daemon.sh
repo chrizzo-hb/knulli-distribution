@@ -17,8 +17,8 @@ KEY_LED_BATTERY_LOW_THRESHOLD="led.battery.low"
 KEY_LED_BATTERY_CHARGING_ENABLED="led.battery.charging"
 
 # Paths to variables
-VAR_LED_PID="/var/run/analog_stick_led_daemon.led.pid"
-VAR_LED_VALUES="/var/run/analog_stick_led_daemon.values"
+VAR_LED_PID="/var/run/knulli-rgb-led-daemon.led.pid"
+VAR_LED_VALUES="/var/run/knulli-rgb-led-daemon.values"
 
 # Last change date of batocera.conf
 LAST_CONF_CHANGE_DATE=$(date -r "/userdata/system/batocera.conf")
@@ -293,21 +293,21 @@ applyLedSettings() {
   # If battery is charging and either last mode was different or a change in brightness has been registered
   if [ $CURRENT_BATTERY_MODE -eq $MODE_BATTERY_CHARGING ] && ([ $LAST_MODE -ne $MODE_BATTERY_CHARGING ] || [ $APPLIED_BRIGHTNESS -ne $LAST_APPLIED_BRIGHTNESS ]); then
     echo "Going to LED mode 'charging'"
-    /usr/bin/analog_stick_led.sh $BATTERY_WARNING_MODE $APPLIED_BRIGHTNESS ${DEFAULT_COLOUR[0]} ${DEFAULT_COLOUR[1]} ${DEFAULT_COLOUR[2]} ${DEFAULT_COLOUR[0]} ${DEFAULT_COLOUR[1]} ${DEFAULT_COLOUR[2]}
+    /usr/bin/knulli-rgb-led.sh $BATTERY_WARNING_MODE $APPLIED_BRIGHTNESS ${DEFAULT_COLOUR[0]} ${DEFAULT_COLOUR[1]} ${DEFAULT_COLOUR[2]} ${DEFAULT_COLOUR[0]} ${DEFAULT_COLOUR[1]} ${DEFAULT_COLOUR[2]}
     LAST_MODE=$MODE_BATTERY_CHARGING
     LAST_APPLIED_BRIGHTNESS=$APPLIED_BRIGHTNESS
 
   # If battery is low and either last mode was different or a change in brightness has been registered
   elif [ $CURRENT_BATTERY_MODE -eq $MODE_BATTERY_WARNING ] && ([ $LAST_MODE -ne $MODE_BATTERY_WARNING ] || [ $APPLIED_BRIGHTNESS -ne $LAST_APPLIED_BRIGHTNESS ]); then
     echo "Going to LED mode 'warning'"
-    /usr/bin/analog_stick_led.sh $BATTERY_WARNING_MODE $APPLIED_BRIGHTNESS ${BATTERY_WARNING_COLOUR[0]} ${BATTERY_WARNING_COLOUR[1]} ${BATTERY_WARNING_COLOUR[2]} ${BATTERY_WARNING_COLOUR[0]} ${BATTERY_WARNING_COLOUR[1]} ${BATTERY_WARNING_COLOUR[2]}
+    /usr/bin/knulli-rgb-led.sh $BATTERY_WARNING_MODE $APPLIED_BRIGHTNESS ${BATTERY_WARNING_COLOUR[0]} ${BATTERY_WARNING_COLOUR[1]} ${BATTERY_WARNING_COLOUR[2]} ${BATTERY_WARNING_COLOUR[0]} ${BATTERY_WARNING_COLOUR[1]} ${BATTERY_WARNING_COLOUR[2]}
     LAST_MODE=$MODE_BATTERY_WARNING
     LAST_APPLIED_BRIGHTNESS=$APPLIED_BRIGHTNESS
  
    # If battery is dangerously low and either last mode was different or a change in brightness has been registered
   elif [ $CURRENT_BATTERY_MODE -eq $MODE_BATTERY_DANGER ] && ([ $LAST_MODE -ne $MODE_BATTERY_DANGER ] || [ $APPLIED_BRIGHTNESS -ne $LAST_APPLIED_BRIGHTNESS ]); then
     echo "Going to LED mode 'danger'"
-    /usr/bin/analog_stick_led.sh $MODE_BATTERY_DANGER $APPLIED_BRIGHTNESS ${BATTERY_DANGER_COLOUR[0]} ${BATTERY_DANGER_COLOUR[1]} ${BATTERY_DANGER_COLOUR[2]} ${BATTERY_DANGER_COLOUR[0]} ${BATTERY_DANGER_COLOUR[1]} ${BATTERY_DANGER_COLOUR[2]}
+    /usr/bin/knulli-rgb-led.sh $MODE_BATTERY_DANGER $APPLIED_BRIGHTNESS ${BATTERY_DANGER_COLOUR[0]} ${BATTERY_DANGER_COLOUR[1]} ${BATTERY_DANGER_COLOUR[2]} ${BATTERY_DANGER_COLOUR[0]} ${BATTERY_DANGER_COLOUR[1]} ${BATTERY_DANGER_COLOUR[2]}
     LAST_MODE=$MODE_BATTERY_DANGER
     LAST_APPLIED_BRIGHTNESS=$APPLIED_BRIGHTNESS
   
@@ -339,16 +339,16 @@ applyLedSettings() {
     # If LED mode was set to 0 (off) and last mode was different
     if [ $LAST_MODE -ne $MODE_OFF ] && [ $LED_MODE -eq 0 ]; then
       echo "Turning off RGB LEDs."
-      /usr/bin/analog_stick_led.sh $LED_MODE
+      /usr/bin/knulli-rgb-led.sh $LED_MODE
       LAST_MODE=$MODE_OFF
     
     # If a change in LED variables was detected or the last mode was different or applied brightness has changed
     elif [ $LED_MODE -gt 0 ] && ($LED_SETTINGS_CHANGE_DETECTED || [ $LAST_MODE -ne $MODE_DEFAULT ] || [ $APPLIED_BRIGHTNESS -ne $LAST_APPLIED_BRIGHTNESS ]); then
       echo "Going to normal LED mode"
       if [ $LED_MODE -lt 5 ]; then
-        /usr/bin/analog_stick_led.sh $LED_MODE $APPLIED_BRIGHTNESS  $LED_RIGHT_R $LED_RIGHT_G $LED_RIGHT_B $LED_LEFT_R $LED_LEFT_G $LED_LEFT_B
+        /usr/bin/knulli-rgb-led.sh $LED_MODE $APPLIED_BRIGHTNESS  $LED_RIGHT_R $LED_RIGHT_G $LED_RIGHT_B $LED_LEFT_R $LED_LEFT_G $LED_LEFT_B
       else
-        /usr/bin/analog_stick_led.sh $LED_MODE $APPLIED_BRIGHTNESS $LED_SPEED
+        /usr/bin/knulli-rgb-led.sh $LED_MODE $APPLIED_BRIGHTNESS $LED_SPEED
       fi
       LAST_MODE=$MODE_DEFAULT
       LED_SETTINGS_CHANGE_DETECTED=false
@@ -426,7 +426,7 @@ start() {
 stop() {
   kill $(cat $VAR_LED_PID)
   rm $VAR_LED_PID
-  /usr/bin/analog_stick_led.sh 0
+  /usr/bin/knulli-rgb-led.sh 0
   echo "Stopped analog stick RGB LED daemon."
 }
 
@@ -454,7 +454,7 @@ runAnimation() {
     updateAppliedBrightness
     # Play rainbow animation
     if [ $# -eq 1 ] && [ "$1" == "rainbow" ]; then
-      /usr/bin/analog_stick_led.sh 6 $APPLIED_BRIGHTNESS 50
+      /usr/bin/knulli-rgb-led.sh 6 $APPLIED_BRIGHTNESS 50
       LAST_APPLIED_BRIGHTNESS=$APPLIED_BRIGHTNESS
       sleep 1.5
     fi
@@ -483,7 +483,7 @@ printInstructions() {
   echo "             $0 animation rainbow"
   echo "             Supported animations: rainbow"
   echo ""
-  echo "Requires analog_stick_led.sh to be installed."
+  echo "Requires knulli-rgb-led.sh to be installed."
   echo "Only works on RG40XX H/V devices."
 }
 
